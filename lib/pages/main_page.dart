@@ -13,7 +13,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-
   Future<List<Photo>> _getPhotos() async {
     var data = await http.get(
         'https://api.unsplash.com/photos/?client_id=ab3411e4ac868c2646c0ed488dfd919ef612b04c264f3374c97fff98ed253dc9');
@@ -22,13 +21,13 @@ class _MainPageState extends State<MainPage> {
 
     List<Photo> photos = [];
 
-    for (var item in jsonData) {
+    jsonData.forEach((item) {
       Photo onePhoto = Photo(
           imageUrl: item['urls']['regular'],
           author: item['user']['name'],
           description: item['description']);
       photos.add(onePhoto);
-    }
+    });
 
     print('photos in the list ${photos.length}');
 
@@ -46,12 +45,10 @@ class _MainPageState extends State<MainPage> {
           future: _getPhotos(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-
               print(snapshot.error);
 
               return LoadingWidget();
-            }
-            else if (snapshot.hasData) {
+            } else if (snapshot.hasData) {
               return ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
@@ -62,8 +59,7 @@ class _MainPageState extends State<MainPage> {
                   );
                 },
               );
-            }
-            else if (!snapshot.hasData) {
+            } else if (!snapshot.hasData) {
               print('Snapshot has no data');
               return LoadingWidget();
             }
